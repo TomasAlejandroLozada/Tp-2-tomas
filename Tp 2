@@ -1,0 +1,86 @@
+#include <iostream>
+#include <string>
+
+class CPersona {
+private:
+    std::string nombre;
+    int edad;
+    std::string DNI;
+    char genero; 
+    double peso;
+    double altura;
+
+    void comprobarGenero(char& genero) {
+        if (genero != 'H' && genero != 'M') {
+            genero = 'H';
+        }
+    }
+
+public:
+    static const int BAJO_PESO = -1;
+    static const int PESO_IDEAL = 0;
+    static const int SOBREPESO = 1;
+
+    CPersona() : nombre(""), edad(0), DNI(""), genero('H'), peso(0.0), altura(0.0) {}
+
+    CPersona(std::string nombre, int edad, std::string DNI, char genero, double peso, double altura) 
+        : nombre(nombre), edad(edad), DNI(DNI), peso(peso), altura(altura) {
+        comprobarGenero(genero);
+        this->genero = genero;
+    }
+
+    void setNombre(const std::string& nombre) { this->nombre = nombre; }
+    void setEdad(int edad) { this->edad = edad; }
+    void setDNI(const std::string& DNI) { this->DNI = DNI; }
+    void setGenero(char genero) { comprobarGenero(genero); this->genero = genero; }
+    void setPeso(double peso) { this->peso = peso; }
+    void setAltura(double altura) { this->altura = altura; }
+
+    std::string getNombre() const { return nombre; }
+    int getEdad() const { return edad; }
+    std::string getDNI() const { return DNI; }
+    char getGenero() const { return genero; }
+    double getPeso() const { return peso; }
+    double getAltura() const { return altura; }
+
+    int calcularIMC() const {
+        double imc = peso / (altura * altura);
+        if (imc < 20) {
+            return BAJO_PESO;
+        } else if (imc <= 25) {
+            return PESO_IDEAL;
+        } else {
+            return SOBREPESO;
+        }
+    }
+
+    bool esMayorDeEdad() const {
+        return edad >= 18;
+    }
+};
+
+int main() {
+    CPersona persona("Ana Gomez", 30, "12345678A", 'M', 65.0, 1.70);
+
+    std::cout << "Nombre: " << persona.getNombre() << std::endl;
+    std::cout << "Edad: " << persona.getEdad() << std::endl;
+    std::cout << "DNI: " << persona.getDNI() << std::endl;
+    std::cout << "Genero: " << persona.getGenero() << std::endl;
+    std::cout << "Peso: " << persona.getPeso() << std::endl;
+    std::cout << "Altura: " << persona.getAltura() << std::endl;
+
+    int imc = persona.calcularIMC();
+    std::cout << "IMC: " << imc << " (";
+    if (imc == CPersona::BAJO_PESO) {
+        std::cout << "Bajo peso";
+    } else if (imc == CPersona::PESO_IDEAL) {
+        std::cout << "Peso ideal";
+    } else {
+        std::cout << "Sobrepeso";
+    }
+    std::cout << ")" << std::endl;
+
+    std::cout << "Es mayor de edad: " << (persona.esMayorDeEdad() ? "Si" : "No") << std::endl;
+
+    return 0;
+}
